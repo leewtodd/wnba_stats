@@ -1,0 +1,358 @@
+{
+  "phase": "Phase 2: Correlation Engine & External Source Framework",
+  "timestamp": "2026-03-26",
+  "total_functions": 26,
+  "functions": [
+    {
+      "module": "team_matchups",
+      "name": "compare_teams",
+      "description": "Compare two teams' game-by-game values for a stat across a season",
+      "parameters": {
+        "team_a": {"type": "str", "description": "First team name or abbreviation"},
+        "team_b": {"type": "str", "description": "Second team name or abbreviation"},
+        "stat": {"type": "str", "description": "Stat to compare (e.g., 'points', 'rebounds', 'fg_pct')"},
+        "season": {"type": "int", "description": "Season year (e.g., 2024)", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["game_date", "team_a_name", "team_a_value", "team_b_name", "team_b_value"]
+    },
+    {
+      "module": "team_matchups",
+      "name": "head_to_head",
+      "description": "Show all games between two teams with scores and key stats",
+      "parameters": {
+        "team_a": {"type": "str", "description": "First team name or abbreviation"},
+        "team_b": {"type": "str", "description": "Second team name or abbreviation"},
+        "seasons": {"type": "list", "description": "List of season years (e.g., [2023, 2024])", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["game_date", "season", "home_team", "away_team", "home_score", "away_score", "winner", "home_fg_pct", "away_fg_pct", "home_reb", "away_reb", "home_tov", "away_tov"]
+    },
+    {
+      "module": "team_matchups",
+      "name": "team_splits",
+      "description": "Show a team's average stat split by a dimension (home/away, rest days, etc.)",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name or abbreviation"},
+        "split_by": {"type": "str", "description": "Split dimension: 'home_away', 'rest_days', 'conference', 'month'"},
+        "stat": {"type": "str", "description": "Stat to analyze"},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["split_category", "games", "avg_value", "std_value", "min_value", "max_value"]
+    },
+    {
+      "module": "team_matchups",
+      "name": "team_rankings",
+      "description": "Rank all teams by a stat for a season",
+      "parameters": {
+        "stat": {"type": "str", "description": "Stat to rank by"},
+        "season": {"type": "int", "description": "Season year"},
+        "per_mode": {"type": "str", "description": "'per_game' or 'total'", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["rank", "team_name", "abbreviation", "value", "games_played"]
+    },
+    {
+      "module": "player_trends",
+      "name": "player_game_log",
+      "description": "Get all games for a player in a season with full box score stats",
+      "parameters": {
+        "player": {"type": "str", "description": "Player name"},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["game_date", "opponent", "team", "home_away", "minutes", "points", "fgm", "fga", "fg_pct", "fg3m", "fg3a", "fg3_pct", "ftm", "fta", "ft_pct", "oreb", "dreb", "reb", "ast", "stl", "blk", "tov", "pf", "plus_minus"]
+    },
+    {
+      "module": "player_trends",
+      "name": "player_rolling_average",
+      "description": "Calculate rolling average for a player stat over a game window",
+      "parameters": {
+        "player": {"type": "str", "description": "Player name"},
+        "stat": {"type": "str", "description": "Stat to track"},
+        "window": {"type": "int", "description": "Rolling window size (games)", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["game_date", "opponent", "value", "rolling_avg"]
+    },
+    {
+      "module": "player_trends",
+      "name": "player_splits",
+      "description": "Show a player's average stat split by a dimension",
+      "parameters": {
+        "player": {"type": "str", "description": "Player name"},
+        "split_by": {"type": "str", "description": "Split dimension: 'home_away', 'opponent', 'rest_days', 'month'"},
+        "stat": {"type": "str", "description": "Stat to analyze"},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["split_category", "games", "avg_value", "std_value"]
+    },
+    {
+      "module": "player_trends",
+      "name": "player_vs_team",
+      "description": "Show a player's performance against a specific team, optionally split by home/away",
+      "parameters": {
+        "player": {"type": "str", "description": "Player name"},
+        "opponent_team": {"type": "str", "description": "Opponent team name or abbreviation"},
+        "stat": {"type": "str", "description": "Stat to analyze"},
+        "season": {"type": "int", "description": "Season year", "optional": true},
+        "split_by_location": {"type": "bool", "description": "Split by home vs away", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["location", "games", "avg_value", "std_value", "game_dates"]
+    },
+    {
+      "module": "player_trends",
+      "name": "player_streak_finder",
+      "description": "Find consecutive game streaks where a player was above/below a threshold for a stat",
+      "parameters": {
+        "player": {"type": "str", "description": "Player name"},
+        "stat": {"type": "str", "description": "Stat to check"},
+        "threshold": {"type": "float", "description": "Threshold value"},
+        "direction": {"type": "str", "description": "'above' or 'below'", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["streak_start", "streak_end", "length", "avg_during_streak", "games_in_streak"]
+    },
+    {
+      "module": "player_trends",
+      "name": "player_comparison",
+      "description": "Side-by-side season averages for two players",
+      "parameters": {
+        "player_a": {"type": "str", "description": "First player name"},
+        "player_b": {"type": "str", "description": "Second player name"},
+        "stats": {"type": "list", "description": "List of stats to compare (default: all)", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["stat_name", "player_a_name", "player_a_avg", "player_a_games", "player_b_name", "player_b_avg", "player_b_games"]
+    },
+    {
+      "module": "game_context",
+      "name": "rest_day_impact",
+      "description": "Compare team performance across rest day categories (back-to-back, short rest, normal rest)",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name (None for league-wide)", "optional": true},
+        "stat": {"type": "str", "description": "Stat to analyze", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["rest_category", "games", "mean", "std", "p_value"]
+    },
+    {
+      "module": "game_context",
+      "name": "travel_impact",
+      "description": "Correlate travel distance with team performance",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name (None for league-wide)", "optional": true},
+        "stat": {"type": "str", "description": "Stat to analyze", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true},
+        "distance_buckets": {"type": "list", "description": "Distance bucket boundaries in miles", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["distance_bucket", "games", "mean", "std"]
+    },
+    {
+      "module": "game_context",
+      "name": "home_away_analysis",
+      "description": "Compare team performance at home vs away",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name (None for league-wide)", "optional": true},
+        "stat": {"type": "str", "description": "Stat to analyze", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["location", "games", "mean", "std", "win_pct"]
+    },
+    {
+      "module": "game_context",
+      "name": "schedule_density_impact",
+      "description": "Measure how the number of games in the last N days correlates with performance",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name (None for league-wide)", "optional": true},
+        "stat": {"type": "str", "description": "Stat to analyze", "optional": true},
+        "window": {"type": "int", "description": "Lookback window in days", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["games_in_window", "sample_size", "mean", "std"]
+    },
+    {
+      "module": "game_context",
+      "name": "back_to_back_analysis",
+      "description": "Comprehensive back-to-back game analysis: win rate, scoring, key stat changes",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name (None for league-wide)", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["metric", "b2b_value", "non_b2b_value", "difference", "sample_b2b", "sample_non_b2b"]
+    },
+    {
+      "module": "referee_analysis",
+      "name": "referee_game_log",
+      "description": "Show all games officiated by a referee",
+      "parameters": {
+        "referee_name": {"type": "str", "description": "Referee name (full or partial)"},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["game_date", "home_team", "away_team", "home_score", "away_score", "total_fouls", "total_fta"]
+    },
+    {
+      "module": "referee_analysis",
+      "name": "referee_impact",
+      "description": "For each referee, show average stat in their games vs league average",
+      "parameters": {
+        "stat": {"type": "str", "description": "Stat to analyze (default: personal fouls)", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["referee_name", "games_officiated", "avg_stat", "league_avg", "deviation", "p_value"]
+    },
+    {
+      "module": "referee_analysis",
+      "name": "referee_team_tendencies",
+      "description": "How a referee's games affect each team's stats",
+      "parameters": {
+        "referee_name": {"type": "str", "description": "Referee name"},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["team_name", "games_with_ref", "avg_pf_with_ref", "avg_pf_overall", "difference"]
+    },
+    {
+      "module": "referee_analysis",
+      "name": "crew_analysis",
+      "description": "Show the officiating crew for a game and their historical tendencies",
+      "parameters": {
+        "game_id": {"type": "str", "description": "Game ID string"}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["official_name", "jersey_number", "career_games", "avg_total_fouls", "avg_total_fta"]
+    },
+    {
+      "module": "correlation",
+      "name": "correlate_stats",
+      "description": "Compute Pearson and Spearman correlation between two stats",
+      "parameters": {
+        "stat_x": {"type": "str", "description": "First stat"},
+        "stat_y": {"type": "str", "description": "Second stat"},
+        "level": {"type": "str", "description": "'player_game', 'team_game', or 'player_season'", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true},
+        "team": {"type": "str", "description": "Filter to one team", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["stat_x_value", "stat_y_value"],
+      "attrs": ["r_value", "p_value", "r_squared", "spearman_r", "spearman_p", "sample_size"]
+    },
+    {
+      "module": "correlation",
+      "name": "correlation_matrix",
+      "description": "Compute correlation matrix across multiple stats",
+      "parameters": {
+        "stats": {"type": "list", "description": "List of stat names (3-8 recommended)"},
+        "level": {"type": "str", "description": "'player_game' or 'team_game'", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame (correlation matrix)",
+      "return_columns": ["stats..."],
+      "attrs": ["p_values"]
+    },
+    {
+      "module": "correlation",
+      "name": "stat_vs_outcome",
+      "description": "Correlate a stat with win/loss outcome using logistic regression",
+      "parameters": {
+        "stat": {"type": "str", "description": "Stat to test"},
+        "level": {"type": "str", "description": "'team_game' level", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["stat_value", "win"],
+      "attrs": ["coefficient", "p_value", "odds_ratio", "pseudo_r_squared"]
+    },
+    {
+      "module": "correlation",
+      "name": "find_strong_correlations",
+      "description": "Scan all stat pairs and find statistically significant correlations",
+      "parameters": {
+        "level": {"type": "str", "description": "'player_game' or 'team_game'", "optional": true},
+        "season": {"type": "int", "description": "Season year", "optional": true},
+        "min_r": {"type": "float", "description": "Minimum absolute r-value", "optional": true},
+        "max_p": {"type": "float", "description": "Maximum p-value", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["stat_x", "stat_y", "r_value", "p_value", "abs_r"]
+    },
+    {
+      "module": "computed_fields",
+      "name": "get_rest_days",
+      "description": "Get rest days before each game for a team in a season",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name or abbreviation"},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["game_id", "game_date", "opponent", "rest_days"]
+    },
+    {
+      "module": "computed_fields",
+      "name": "get_travel_distance",
+      "description": "Get travel distance for each game for a team in a season",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name or abbreviation"},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["game_id", "game_date", "opponent", "travel_distance_miles", "from_city", "to_city"]
+    },
+    {
+      "module": "computed_fields",
+      "name": "get_schedule_context",
+      "description": "Get enriched game log with rest days, travel, home/away, and results",
+      "parameters": {
+        "team": {"type": "str", "description": "Team name or abbreviation"},
+        "season": {"type": "int", "description": "Season year", "optional": true}
+      },
+      "returns": "DataFrame",
+      "return_columns": ["game_id", "game_date", "opponent", "home_away", "rest_days", "rest_category", "travel_distance_miles", "result", "points_scored", "points_allowed"]
+    }
+  ],
+  "stat_column_map": {
+    "points": "points",
+    "minutes": "minutes",
+    "fgm": "fgm",
+    "fga": "fga",
+    "fg_pct": "fg_pct",
+    "fg3m": "fg3m",
+    "fg3a": "fg3a",
+    "fg3_pct": "fg3_pct",
+    "ftm": "ftm",
+    "fta": "fta",
+    "ft_pct": "ft_pct",
+    "oreb": "oreb",
+    "dreb": "dreb",
+    "reb": "reb",
+    "ast": "ast",
+    "stl": "stl",
+    "blk": "blk",
+    "tov": "tov",
+    "pf": "pf",
+    "plus_minus": "plus_minus",
+    "rebounds": "reb",
+    "assists": "ast",
+    "steals": "stl",
+    "blocks": "blk",
+    "turnovers": "tov",
+    "fouls": "pf",
+    "personal_fouls": "pf",
+    "field_goal_pct": "fg_pct",
+    "three_point_pct": "fg3_pct",
+    "free_throw_pct": "ft_pct"
+  }
+}

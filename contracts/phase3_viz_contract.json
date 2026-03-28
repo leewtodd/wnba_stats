@@ -1,0 +1,311 @@
+{
+  "generated_at": "2026-03-26",
+  "phase": 3,
+  "title": "WNBA Analytics Phase 3 — Visualization Layer & Streamlit UI Contract",
+  "viz_functions": [
+    {
+      "name": "trend_line",
+      "module": "viz.trends",
+      "description": "Line chart with optional rolling average overlay and confidence interval bands",
+      "params": [
+        {"name": "df", "type": "DataFrame"},
+        {"name": "x_col", "type": "str", "description": "x-axis column (typically 'game_date')"},
+        {"name": "y_col", "type": "str", "description": "y-axis column (raw stat values)"},
+        {"name": "title", "type": "str"},
+        {"name": "rolling_col", "type": "str", "optional": true},
+        {"name": "ci_col", "type": "str", "optional": true},
+        {"name": "color", "type": "str", "optional": true}
+      ],
+      "returns": "plotly.graph_objects.Figure"
+    },
+    {
+      "name": "animated_timeline",
+      "module": "viz.trends",
+      "description": "Animated scatter plot over time (placeholder implementation)",
+      "params": [
+        {"name": "df", "type": "DataFrame"},
+        {"name": "x_col", "type": "str"},
+        {"name": "y_col", "type": "str"},
+        {"name": "frame_col", "type": "str"},
+        {"name": "title", "type": "str"},
+        {"name": "color_col", "type": "str", "optional": true}
+      ],
+      "returns": "plotly.graph_objects.Figure"
+    },
+    {
+      "name": "heat_map",
+      "module": "viz.heatmaps",
+      "description": "2D heatmap with color intensity representing values",
+      "params": [
+        {"name": "df", "type": "DataFrame"},
+        {"name": "x_col", "type": "str"},
+        {"name": "y_col", "type": "str"},
+        {"name": "value_col", "type": "str"},
+        {"name": "title", "type": "str"},
+        {"name": "color_scale", "type": "str", "default": "RdYlGn"},
+        {"name": "zmid", "type": "float", "optional": true}
+      ],
+      "returns": "plotly.graph_objects.Figure"
+    },
+    {
+      "name": "scatter_correlation",
+      "module": "viz.scatter",
+      "description": "Scatter plot with optional regression line and statistical annotations",
+      "params": [
+        {"name": "df", "type": "DataFrame"},
+        {"name": "x_col", "type": "str"},
+        {"name": "y_col", "type": "str"},
+        {"name": "title", "type": "str"},
+        {"name": "color_col", "type": "str", "optional": true},
+        {"name": "size_col", "type": "str", "optional": true},
+        {"name": "show_regression", "type": "bool", "default": true},
+        {"name": "stats_dict", "type": "dict", "optional": true, "description": "Pre-computed {'r_value', 'p_value', 'r_squared'}"}
+      ],
+      "returns": "plotly.graph_objects.Figure",
+      "annotations": "Shows R², p-value, r in top-left corner when stats_dict provided"
+    },
+    {
+      "name": "split_comparison",
+      "module": "viz.comparisons",
+      "description": "Grouped bar or line chart comparing values across categories",
+      "params": [
+        {"name": "df", "type": "DataFrame"},
+        {"name": "category_col", "type": "str"},
+        {"name": "value_cols", "type": "str or list"},
+        {"name": "title", "type": "str"},
+        {"name": "chart_type", "type": "str", "default": "bar", "options": ["bar", "line"]},
+        {"name": "labels", "type": "dict", "optional": true}
+      ],
+      "returns": "plotly.graph_objects.Figure"
+    },
+    {
+      "name": "radar_chart",
+      "module": "viz.comparisons",
+      "description": "Spider/radar chart for multi-stat comparison with normalized values",
+      "params": [
+        {"name": "df", "type": "DataFrame"},
+        {"name": "categories_col", "type": "str", "description": "Column with stat names (axes)"},
+        {"name": "values_cols", "type": "list", "description": "Column names to plot (one trace per column)"},
+        {"name": "labels", "type": "list", "description": "Trace labels (entity names)"},
+        {"name": "title", "type": "str"}
+      ],
+      "returns": "plotly.graph_objects.Figure",
+      "normalization": "Values normalized to 0-100 range per stat"
+    },
+    {
+      "name": "drilldown_table",
+      "module": "viz.drilldown",
+      "description": "Summary bar chart designed to work with companion selectbox for drill-down",
+      "params": [
+        {"name": "summary_df", "type": "DataFrame"},
+        {"name": "summary_x", "type": "str"},
+        {"name": "summary_y", "type": "str"},
+        {"name": "title", "type": "str"}
+      ],
+      "returns": "plotly.graph_objects.Figure"
+    },
+    {
+      "name": "apply_theme",
+      "module": "viz.common",
+      "description": "Apply consistent WNBA Analytics styling to a Plotly figure",
+      "params": [
+        {"name": "fig", "type": "plotly.graph_objects.Figure"}
+      ],
+      "returns": "plotly.graph_objects.Figure"
+    },
+    {
+      "name": "no_data_chart",
+      "module": "viz.common",
+      "description": "Placeholder figure with centered message for empty DataFrames",
+      "params": [
+        {"name": "title", "type": "str"},
+        {"name": "message", "type": "str", "default": "No data available for the selected filters"}
+      ],
+      "returns": "plotly.graph_objects.Figure"
+    }
+  ],
+  "pages": {
+    "team_analysis": {
+      "file": "app/pages/team_analysis.py",
+      "sections": 4,
+      "section_details": [
+        {
+          "name": "Team Comparison",
+          "engine_function": "compare_teams",
+          "viz_function": "trend_line (custom plotly)",
+          "description": "Line chart of two teams' stat over time"
+        },
+        {
+          "name": "Head to Head",
+          "engine_function": "head_to_head",
+          "viz_function": "render_dataframe",
+          "description": "All games between two teams with summary stats"
+        },
+        {
+          "name": "Team Splits",
+          "engine_function": "team_splits",
+          "viz_function": "split_comparison",
+          "description": "Stats split by home/away, rest_days, conference, month"
+        },
+        {
+          "name": "Team Rankings",
+          "engine_function": "team_rankings",
+          "viz_function": "px.bar (custom plotly)",
+          "description": "Horizontal bar chart of all teams ranked by stat"
+        }
+      ],
+      "engine_functions_used": ["compare_teams", "head_to_head", "team_splits", "team_rankings"]
+    },
+    "player_analysis": {
+      "file": "app/pages/player_analysis.py",
+      "sections": 5,
+      "section_details": [
+        {
+          "name": "Player Game Log",
+          "engine_function": "player_game_log",
+          "viz_function": "render_dataframe",
+          "description": "All games with full box score for a player"
+        },
+        {
+          "name": "Rolling Trends",
+          "engine_function": "player_rolling_average",
+          "viz_function": "trend_line",
+          "description": "n-game rolling average with confidence band"
+        },
+        {
+          "name": "Player Splits",
+          "engine_function": "player_splits",
+          "viz_function": "split_comparison",
+          "description": "Stats split by home/away, opponent, rest_days, month"
+        },
+        {
+          "name": "Player vs Team",
+          "engine_function": "player_vs_team",
+          "viz_function": "split_comparison",
+          "description": "Home vs Away performance against specific opponent"
+        },
+        {
+          "name": "Player Comparison",
+          "engine_function": "player_comparison",
+          "viz_function": "radar_chart + render_dataframe",
+          "description": "Radar chart and full stat table side-by-side"
+        }
+      ],
+      "engine_functions_used": ["player_game_log", "player_rolling_average", "player_splits", "player_vs_team", "player_comparison"]
+    },
+    "game_context": {
+      "file": "app/pages/game_context.py",
+      "sections": 4,
+      "section_details": [
+        {
+          "name": "Rest Day Impact",
+          "engine_function": "rest_day_impact",
+          "viz_function": "split_comparison",
+          "description": "Performance across rest categories with p-values"
+        },
+        {
+          "name": "Travel Impact",
+          "engine_function": "travel_impact",
+          "viz_function": "split_comparison",
+          "description": "Distance buckets vs performance with stats"
+        },
+        {
+          "name": "Home/Away Analysis",
+          "engine_function": "home_away_analysis",
+          "viz_function": "split_comparison",
+          "description": "Home vs away with win percentage"
+        },
+        {
+          "name": "Referee Impact",
+          "engine_function": "referee_impact",
+          "viz_function": "px.bar + referee_game_log",
+          "description": "Top referees by deviation with game log drill-down"
+        }
+      ],
+      "engine_functions_used": ["rest_day_impact", "travel_impact", "home_away_analysis", "referee_impact", "referee_game_log"]
+    },
+    "correlation_lab": {
+      "file": "app/pages/correlation_lab.py",
+      "sections": 3,
+      "section_details": [
+        {
+          "name": "Two-Stat Correlation",
+          "engine_function": "correlate_stats",
+          "viz_function": "scatter_correlation",
+          "description": "Scatter with regression line, R², p-value annotation"
+        },
+        {
+          "name": "Correlation Matrix",
+          "engine_function": "correlation_matrix",
+          "viz_function": "heat_map",
+          "description": "Heatmap of stat-to-stat correlations"
+        },
+        {
+          "name": "Discovery",
+          "engine_function": "find_strong_correlations",
+          "viz_function": "render_dataframe",
+          "description": "Scan all stat pairs for significant correlations"
+        }
+      ],
+      "engine_functions_used": ["correlate_stats", "correlation_matrix", "find_strong_correlations"]
+    },
+    "chat": {
+      "file": "app/pages/chat.py",
+      "sections": 1,
+      "section_details": [
+        {
+          "name": "Chat Interface",
+          "description": "Placeholder — coming in Phase 4"
+        }
+      ],
+      "engine_functions_used": []
+    }
+  },
+  "components": {
+    "filters": {
+      "file": "app/components/filters.py",
+      "exports": [
+        "season_selector",
+        "team_selector",
+        "player_selector",
+        "stat_selector",
+        "date_range_selector"
+      ]
+    },
+    "chart_wrapper": {
+      "file": "app/components/chart_wrapper.py",
+      "exports": [
+        "render_chart",
+        "render_dataframe"
+      ]
+    }
+  },
+  "wnba_team_colors": {
+    "description": "13 WNBA teams with primary and secondary colors",
+    "teams": [
+      "LVA (Aces)",
+      "NYL (Liberty)",
+      "CHI (Sky)",
+      "CON (Sun)",
+      "DAL (Wings)",
+      "IND (Fever)",
+      "LAS (Sparks)",
+      "MIN (Lynx)",
+      "PHO (Mercury)",
+      "SEA (Storm)",
+      "WAS (Mystics)",
+      "ATL (Dream)",
+      "GSV (Valkyries)"
+    ]
+  },
+  "completion_gates": {
+    "total": 28,
+    "categories": {
+      "skip_prone_sections": 5,
+      "all_streamlit_pages": 5,
+      "streamlit_infrastructure": 3,
+      "viz_layer_files": 7,
+      "verification_gates": 8
+    }
+  }
+}

@@ -1,0 +1,138 @@
+[
+  {
+    "team_abbreviation": "LVA",
+    "arena_name": "Michelob ULTRA Arena",
+    "city": "Las Vegas",
+    "state": "NV",
+    "latitude": 36.0909,
+    "longitude": -115.1761,
+    "season_start": 2018,
+    "season_end": null,
+    "_note": "At Mandalay Bay. NOT T-Mobile Arena."
+  },
+  {
+    "team_abbreviation": "PHO",
+    "arena_name": "Footprint Center",
+    "city": "Phoenix",
+    "state": "AZ",
+    "latitude": 33.4457,
+    "longitude": -112.0712,
+    "season_start": 1997,
+    "season_end": null,
+    "_note": "API abbreviation is PHO, not PHX."
+  },
+  {
+    "team_abbreviation": "LAS",
+    "arena_name": "Crypto.com Arena",
+    "city": "Los Angeles",
+    "state": "CA",
+    "latitude": 34.0430,
+    "longitude": -118.2673,
+    "season_start": 2001,
+    "season_end": null,
+    "_note": "Sparks. API abbreviation is LAS, not LA."
+  },
+  {
+    "team_abbreviation": "SEA",
+    "arena_name": "Climate Pledge Arena",
+    "city": "Seattle",
+    "state": "WA",
+    "latitude": 47.6221,
+    "longitude": -122.3540,
+    "season_start": 2021,
+    "season_end": null
+  },
+  {
+    "team_abbreviation": "DAL",
+    "arena_name": "College Park Center",
+    "city": "Arlington",
+    "state": "TX",
+    "latitude": 32.7310,
+    "longitude": -97.1078,
+    "season_start": 2016,
+    "season_end": null
+  },
+  {
+    "team_abbreviation": "NYL",
+    "arena_name": "Barclays Center",
+    "city": "Brooklyn",
+    "state": "NY",
+    "latitude": 40.6826,
+    "longitude": -73.9754,
+    "season_start": 2021,
+    "season_end": null,
+    "_note": "API abbreviation is NYL, not NY."
+  },
+  {
+    "team_abbreviation": "WAS",
+    "arena_name": "Entertainment and Sports Arena",
+    "city": "Washington",
+    "state": "DC",
+    "latitude": 38.8690,
+    "longitude": -76.9726,
+    "season_start": 2019,
+    "season_end": null,
+    "_note": "API abbreviation is WAS, not WSH."
+  },
+  {
+    "team_abbreviation": "IND",
+    "arena_name": "Gainbridge Fieldhouse",
+    "city": "Indianapolis",
+    "state": "IN",
+    "latitude": 39.7639,
+    "longitude": -86.1555,
+    "season_start": 2000,
+    "season_end": null
+  },
+  {
+    "team_abbreviation": "ATL",
+    "arena_name": "Gateway Center Arena",
+    "city": "College Park",
+    "state": "GA",
+    "latitude": 33.6532,
+    "longitude": -84.4472,
+    "season_start": 2019,
+    "season_end": null
+  },
+  {
+    "team_abbreviation": "CHI",
+    "arena_name": "Wintrust Arena",
+    "city": "Chicago",
+    "state": "IL",
+    "latitude": 41.8561,
+    "longitude": -87.6166,
+    "season_start": 2018,
+    "season_end": null
+  },
+  {
+    "team_abbreviation": "CON",
+    "arena_name": "Mohegan Sun Arena",
+    "city": "Uncasville",
+    "state": "CT",
+    "latitude": 41.4946,
+    "longitude": -72.1006,
+    "season_start": 2003,
+    "season_end": null
+  },
+  {
+    "team_abbreviation": "MIN",
+    "arena_name": "Target Center",
+    "city": "Minneapolis",
+    "state": "MN",
+    "latitude": 44.9795,
+    "longitude": -93.2760,
+    "season_start": 1999,
+    "season_end": null
+  },
+  {
+    "team_abbreviation": "GS",
+    "arena_name": "Chase Center",
+    "city": "San Francisco",
+    "state": "CA",
+    "latitude": 37.7680,
+    "longitude": -122.3877,
+    "season_start": 2025,
+    "season_end": null,
+    "_note": "Golden State Valkyries expansion team, first season 2025. Will load when 2025 season data is pulled."
+  }
+]
