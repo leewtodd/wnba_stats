@@ -36,7 +36,7 @@ def save_fixture(name, data):
 def print_headers(label, result_sets):
     """Print headers from each resultSet."""
     if not result_sets:
-        print(f"  ⚠ No resultSets returned")
+        print("  ⚠ No resultSets returned")
         return
 
     for i, rs in enumerate(result_sets):

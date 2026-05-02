@@ -7,7 +7,6 @@ from itertools import combinations
 from engine.base import engine_function
 from engine.utils import get_session, resolve_team, validate_stat
 from models.core import Game, PlayerGameStats, TeamGameStats
-from models.core import Player, Team
 
 logger = logging.getLogger(__name__)
 
@@ -330,7 +329,7 @@ def find_strong_correlations(level: str = "team_game", season=None, min_r: float
                 try:
                     validate_stat(col.name)
                     stat_cols.append(col.name)
-                except:
+                except ValueError:
                     pass
 
         rows = []
