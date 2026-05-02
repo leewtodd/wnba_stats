@@ -37,6 +37,7 @@ def build_system_prompt():
             except Exception:
                 pass
 
+            nullable_str = "nullable" if nullable else "NOT NULL"
             prompt_parts.append(f"  {col_name} ({col_type}{pk_info})")
 
         prompt_parts.append("")
