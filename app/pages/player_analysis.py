@@ -2,6 +2,7 @@
 import streamlit as st
 from components.filters import player_selector, stat_selector, team_selector
 from components.chart_wrapper import render_chart, render_dataframe
+from components import ui
 from viz import trend_line, split_comparison, radar_chart, no_data_chart, format_stat_label
 from engine.player_trends import (
     player_game_log, player_rolling_average, player_splits,
@@ -10,7 +11,19 @@ from engine.player_trends import (
 
 
 def render(season):
-    st.header("Player Analysis")
+    ui.page_header(
+        title="Player Analysis",
+        crumb=f"WNBA · {season} REG",
+        subtitle="Game logs, rolling averages, splits, and player vs. team.",
+        badges_html=ui.data_badge("box_score"),
+    )
+    # Shot map is in the design but requires shot-tracking data we don't yet pull.
+    ui.unsupported_overlay(
+        "Shot map (per-shot x, y events)",
+        "The current scraper only pulls box-score endpoints. Adding the shot "
+        "chart endpoint to the scraper would unlock the design's shot-map view.",
+        requirement="add stats.wnba.com `shotchartdetail` endpoint + new `shots` table",
+    )
     
     # ──────────────────────────────────────
     # SECTION 1: Player Game Log

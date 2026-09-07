@@ -3,12 +3,18 @@ import streamlit as st
 import plotly.express as px
 from components.filters import team_selector, stat_selector
 from components.chart_wrapper import render_chart, render_dataframe
+from components import ui
 from viz import split_comparison, no_data_chart, format_stat_label
 from engine.team_matchups import compare_teams, head_to_head, team_splits, team_rankings
 
 
 def render(season):
-    st.header("Team Analysis")
+    ui.page_header(
+        title="Team Analysis",
+        crumb=f"WNBA · {season} REG",
+        subtitle="Matchups, head-to-head, splits, and rankings.",
+        badges_html=ui.data_badge("box_score"),
+    )
     
     # ──────────────────────────────────────
     # SECTION 1: Team Comparison

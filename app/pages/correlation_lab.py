@@ -2,6 +2,7 @@
 import streamlit as st
 from components.filters import stat_selector, team_selector
 from components.chart_wrapper import render_chart, render_dataframe
+from components import ui
 from viz import scatter_correlation, heat_map, no_data_chart, format_stat_label
 from engine.correlation import (
     correlate_stats, correlation_matrix, find_strong_correlations,
@@ -9,7 +10,22 @@ from engine.correlation import (
 
 
 def render(season):
-    st.header("Correlation Lab")
+    ui.page_header(
+        title="Correlation Lab",
+        crumb=f"WNBA · {season} REG",
+        subtitle="Free-form stat-vs-stat exploration. Pearson r, p-values, "
+                 "and the strongest pairs in the box-score schema.",
+        badges_html=ui.data_badge("box_score") + " " + ui.data_badge("derived"),
+    )
+    # The design's UMAP / force-graph treatments require feature engineering
+    # and lineup data we don't have yet — flag that honestly.
+    ui.unsupported_overlay(
+        "UMAP / force graph (player style space, lineup co-occurrence)",
+        "The design includes embedding scatters and a force graph for "
+        "lineup co-occurrence. Box scores can power a thinner UMAP, but the "
+        "force graph needs play-by-play / lineup data not in the scraper.",
+        requirement="define a player-feature vector + add lineup or PBP ingestion",
+    )
     
     # ──────────────────────────────────────
     # SECTION 1: Two-Stat Correlation

@@ -3,6 +3,7 @@ import streamlit as st
 import plotly.express as px
 from components.filters import team_selector, stat_selector
 from components.chart_wrapper import render_chart, render_dataframe
+from components import ui
 from viz import split_comparison, no_data_chart, format_stat_label
 from engine.game_context import (
     rest_day_impact, travel_impact, home_away_analysis,
@@ -11,7 +12,12 @@ from engine.referee_analysis import referee_impact, referee_game_log
 
 
 def render(season):
-    st.header("Game Context Analysis")
+    ui.page_header(
+        title="Game Context",
+        crumb=f"WNBA · {season} REG",
+        subtitle="Rest, travel, home / away, and referee crew impact.",
+        badges_html=ui.data_badge("box_score") + " " + ui.data_badge("derived"),
+    )
     
     # ──────────────────────────────────────
     # SECTION 1: Rest Day Impact

@@ -54,21 +54,28 @@ def format_stat_label(column_name: str) -> str:
 
 
 def apply_theme(fig: go.Figure) -> go.Figure:
-    """Apply consistent WNBA Analytics styling to a Plotly figure.
+    """Apply WNBA Analytics styling by selecting the registered Plotly template.
 
-    Sets: font family (system sans-serif), transparent plot background,
-    light grid lines, consistent margins, legend positioning.
+    The actual look-and-feel lives in `app.components.theme.register_plotly_template`,
+    which builds the `wnba_dark` template from design tokens. We try to use that
+    template if it's been registered (i.e. the Streamlit app has booted) and fall
+    back to a stripped-down inline style for non-app callers (tests, scripts).
     Modifies the figure in place AND returns it.
     """
-    fig.update_layout(
-        font_family="system-ui, -apple-system, sans-serif",
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        xaxis=dict(gridcolor="rgba(128,128,128,0.2)", gridwidth=1),
-        yaxis=dict(gridcolor="rgba(128,128,128,0.2)", gridwidth=1),
-        margin=dict(l=60, r=30, t=50, b=50),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    )
+    import plotly.io as pio
+    if "wnba_dark" in pio.templates:
+        fig.update_layout(template="wnba_dark")
+    else:
+        fig.update_layout(
+            font_family="Inter Tight, Helvetica Neue, Helvetica, Arial, sans-serif",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(gridcolor="rgba(255,255,255,0.06)"),
+            yaxis=dict(gridcolor="rgba(255,255,255,0.06)"),
+            margin=dict(l=56, r=24, t=56, b=48),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02,
+                        xanchor="right", x=1),
+        )
     return fig
 
 

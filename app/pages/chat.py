@@ -13,8 +13,14 @@ logger = logging.getLogger(__name__)
 
 def render():
     """Render the chat interface page."""
-    st.header("💬 WNBA Chat")
-    st.caption("Ask questions about WNBA stats in plain English")
+    from components import ui
+    ui.page_header(
+        title="Chat",
+        crumb="WNBA · NL → SQL · Anthropic",
+        subtitle="Ask questions about WNBA stats in plain English. "
+                 "Responses cite the engine function or SQL they ran.",
+        badges_html=ui.ai_badge("CLAUDE"),
+    )
 
     # Check for API key
     if not os.getenv("ANTHROPIC_API_KEY"):
