@@ -17,11 +17,11 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/leetodd/Desktop/Projects/wnba_stats/scripts/daily_pull.sh</string>
+        <string>/Users/leetodd/Projects/wnba_stats/scripts/daily_pull.sh</string>
     </array>
 
     <key>WorkingDirectory</key>
-    <string>/Users/leetodd/Desktop/Projects/wnba_stats</string>
+    <string>/Users/leetodd/Projects/wnba_stats</string>
 
     <key>StartCalendarInterval</key>
     <dict>

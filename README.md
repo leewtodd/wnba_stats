@@ -13,7 +13,7 @@ Local analytics platform for WNBA game-level statistics with correlation analysi
 ### Setup
 1. Clone and install dependencies:
    ```bash
-   cd /Users/leetodd/Desktop/Projects/wnba_stats
+   cd /Users/leetodd/Projects/wnba_stats
    pip3 install -r requirements.txt
    ```
 
